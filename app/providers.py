@@ -5,10 +5,10 @@ from .secrets import get_secret
 from .db import row,assignments
 
 def _json(text):
-    text=(text or "").strip(); text=re.sub(r"^```(?:json)?\\s*|\\s*```$","",text)
+    text=(text or "").strip(); text=re.sub(r"^\`\`\`(?:json)?\s*|\s*\`\`\`$","",text)
     try:return json.loads(text)
     except Exception:
-        m=re.search(r"(\\{.*\\}|\\[.*\\])",text,re.S)
+        m=re.search(r"(\{.*\}|\[.*\])",text,re.S)
         if not m:raise ValueError("Model did not return valid JSON")
         return json.loads(m.group(1))
 
@@ -18,7 +18,7 @@ def profile(agent_id):
 async def ask_json(agent_id,system,user):
     p=profile(agent_id)
     if not p:raise RuntimeError(f"No model profile for {agent_id}")
-    instruction=system+"\\nReturn ONLY valid JSON. No markdown fences."
+    instruction=system+"\nReturn ONLY valid JSON. No markdown fences."
     if p["provider"]=="openai":
         key=get_secret(p.get("secret_name") or "openai-api","OPENAI_API_KEY") or settings.openai_api_key
         if not key:raise RuntimeError("OpenAI is not connected")
