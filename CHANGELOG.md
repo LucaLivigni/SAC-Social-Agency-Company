@@ -1,23 +1,23 @@
 # Changelog
 
-## 1.0.0 — 2026-11-07
+## 2.0.0 — 2026-11-07
 
-Prima versione utilizzabile di SAC Studio.
+### Architecture
+- Chief-first hierarchical organization.
+- Dynamic Agent Manifest and Agent Builder.
+- Agent-specific model routing and private memory.
+- Shared product/marketing memory.
+- Inter-agent messaging and human escalation.
+- Access request / permission layer.
+- Software + hardware product discovery.
 
-### Added
-- Dashboard con onboarding guidato e next action.
-- Agent Floor con stato, task corrente, modello e avanzamento.
-- GitHub collegato alla piattaforma tramite fine-grained token read-only.
-- Product Analyst che analizza repository private senza passare credenziali ai modelli.
-- Discovery conversazionale dopo l'analisi del codice.
-- Model Hub con OpenAI, Anthropic e provider OpenAI-compatible.
-- Routing modello per singolo agente.
-- Campaign workflow: Strategist → Planner → specialisti social → Revy → Creative.
-- Calendario editoriale e pacchetto READY TO PUBLISH.
-- Credenziali salvate nel macOS Keychain quando disponibile.
-- Setup e avvio macOS tramite script.
+### UX
+- Navigation rebuilt around Chief, Team, Products and Needs You.
+- Always-visible next action during setup.
+- Custom controls and coherent Vercel/Supabase-inspired dark design.
+- Organization view and direct specialist conversations.
 
-### Safety / boundaries
-- Nessuna pubblicazione social automatica in v1.0.0.
-- Repository access in sola lettura.
-- File sensibili e dipendenze esclusi dall'analisi repository.
+### Boundaries
+- GitHub is functional read-only.
+- OpenAI/Anthropic/model routing is functional.
+- Instagram/LinkedIn/X OAuth connectors are not falsely represented as active; permission requests are functional and connector status is explicit.

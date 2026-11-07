@@ -1,9 +1,8 @@
 #!/bin/zsh
 set -e
-
 echo ""
-echo "SAC Studio — setup macOS"
-echo "------------------------"
+echo "SAC Studio v2 — setup macOS"
+echo "---------------------------"
 
 PYTHON_BIN=""
 if command -v python3.12 >/dev/null 2>&1; then
@@ -15,7 +14,6 @@ PY
 then
   PYTHON_BIN="$(command -v python3)"
 elif command -v brew >/dev/null 2>&1; then
-  echo "Python recente non trovato. Installo Python 3.12 con Homebrew..."
   brew install python@3.12
   PYTHON_BIN="$(brew --prefix python@3.12)/bin/python3.12"
 else
@@ -24,12 +22,10 @@ else
 fi
 
 echo "Uso $($PYTHON_BIN --version)"
-rm -rf .venv
-"$PYTHON_BIN" -m venv .venv
+if [ ! -d .venv ]; then "$PYTHON_BIN" -m venv .venv; fi
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 if [ ! -f .env ]; then cp .env.example .env; fi
-
 echo ""
 echo "Setup completato. Avvia con ./run_mac.sh"

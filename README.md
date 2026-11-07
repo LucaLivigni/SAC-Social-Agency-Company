@@ -1,18 +1,34 @@
-# SAC Studio
+# SAC Studio v2
 
-SAC Studio è un workspace locale per gestire un team di agenti AI dedicati al marketing di uno o più prodotti.
+SAC Studio è un **AI marketing department** locale: tu parli principalmente con un Chief Marketing AI, che conosce il prodotto, progetta il team di specialisti, assegna il lavoro, coordina gli agenti e ti coinvolge solo quando servono informazioni, accessi o decisioni.
 
-## Primo utilizzo
+## Flusso
+1. Connect AI
+2. Connect GitHub (opzionale per prodotti non software)
+3. Add product: software, hardware o hybrid
+4. Product discovery conversazionale
+5. Chief propone il team
+6. Build team
+7. Talk to Chief / Create campaign
+8. Guarda gli agenti lavorare e comunicare
+9. Scarica READY TO PUBLISH
 
-1. **Connect AI** — collega OpenAI e/o Anthropic.
-2. **Connect GitHub** — collega la piattaforma a GitHub con un fine-grained token read-only.
-3. **Choose a product repo** — SAC analizza codice e documentazione.
-4. **Product discovery** — rispondi solo alle domande che il codice non può risolvere.
-5. **Create campaign** — osserva gli agenti lavorare e ottieni piano, post, review e visual.
+## Novità v2
+- Chief Agent come unico interlocutore principale
+- Agent Builder dinamico
+- Agent Manifest: missione, prompt, tools, permessi, KPI, memory scope, escalation
+- Model routing per agente: OpenAI, Anthropic o OpenAI-compatible/local
+- Shared + private memory
+- Inter-agent communication log visibile
+- Needs You: richieste di accesso, API, decisioni e approvazioni
+- Product onboarding software + hardware
+- Team proposal generata dal Chief
+- Permission layer per GitHub, Instagram, LinkedIn, X, image/video generation
+- Revy come quality gate indipendente
 
-GitHub è collegato alla **piattaforma**, non ai modelli. Gli agenti usano un tool server-side; il token GitHub non entra mai nei prompt.
+## Installazione / aggiornamento macOS
 
-## Installazione macOS
+Prima installazione:
 
 ```bash
 git clone https://github.com/LucaLivigni/SAC-Social-Agency-Company.git
@@ -22,43 +38,27 @@ chmod +x setup_mac.sh run_mac.sh
 ./run_mac.sh
 ```
 
-Apri `http://127.0.0.1:8000`.
-
-## Aggiornamenti
-
-Dopo il primo clone:
+Aggiornamento:
 
 ```bash
+cd /Users/lucagiannilivigni/Progetti/Marketing/SAC-Social-Agency-Company
 git pull
+./setup_mac.sh
 ./run_mac.sh
 ```
 
-Se cambiano le dipendenze:
-
-```bash
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+Apri `http://127.0.0.1:8000`.
 
 ## GitHub
+Connections → GitHub. Usa un fine-grained PAT con Contents: Read-only e limita l'accesso alle sole repo desiderate. Il token viene salvato nel macOS Keychain quando disponibile e non viene passato ai modelli.
 
-Dalla UI: **Connections → GitHub → Configure**.
-
-Usa un fine-grained personal access token limitato alle sole repository che vuoi rendere leggibili a SAC e con **Contents: Read-only**. Il token viene salvato nel Keychain di macOS.
-
-## Modelli
-
-Provider inclusi:
-- OpenAI
-- Anthropic
-- endpoint OpenAI-compatible, utile per Ollama, LM Studio, vLLM o gateway compatibili
-
-Ogni agente può usare un model profile diverso.
+## Social connections
+La v2 include permission/access-request layer per Instagram, LinkedIn e X. La UI non finge che un social sia collegato senza una vera autorizzazione OAuth/API. Gli agenti possono già dichiarare i tool necessari e generare richieste Needs You; i connector social reali vanno autorizzati con le rispettive app/API.
 
 ## Sicurezza
-
-- `.env` non viene committato.
-- GitHub token e API key inserite dalla UI vengono salvati nel Keychain di macOS quando disponibile.
-- Il token GitHub non viene passato ai modelli.
-- L'analisi repository ignora file sensibili, build e dipendenze e limita la quantità di contenuto letta.
-- La pubblicazione social è manuale in questa versione.
+- Secrets in Keychain / fallback locale protetto
+- `.env` e database esclusi dal repository
+- GitHub read-only
+- Repository scanner esclude segreti, build e dipendenze
+- Gli agenti non ricevono token GitHub
+- Publishing social non automatico finché non viene concesso esplicitamente
