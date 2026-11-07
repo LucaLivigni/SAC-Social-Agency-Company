@@ -1,5 +1,5 @@
 <!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SAC Studio</title><link rel="stylesheet" href="/static/styles.css"></head><body>
-<div class="shell"><aside class="sidebar"><div class="brand"><div class="logo"></div><div><b>SAC Studio</b><small>AI marketing department</small></div></div><div class="nav-label">Work</div><nav class="nav"><button class="nav-btn active" data-page="overview" onclick="nav('overview')">Overview</button><button class="nav-btn" data-page="chief" onclick="nav('chief')">Chief</button><button class="nav-btn" data-page="team" onclick="nav('team')">Team</button><button class="nav-btn" data-page="products" onclick="nav('products')">Products</button><button class="nav-btn" data-page="campaigns" onclick="nav('campaigns')">Campaigns</button><button class="nav-btn" data-page="calendar" onclick="nav('calendar')">Calendar</button></nav><div class="nav-label">System</div><nav class="nav"><button class="nav-btn" data-page="models" onclick="nav('models')">Models</button><button class="nav-btn" data-page="connections" onclick="nav('connections')">Connections</button></nav><div class="sidebar-foot"><div class="mini-status"><span id="miniProject">No active product</span><span class="dot ok"></span></div></div></aside>
+<div class="shell"><aside class="sidebar"><div class="brand"><div class="logo"></div><div><b>SAC Studio</b><small>AI marketing department</small></div></div><div class="nav-label">Work</div><nav class="nav"><button class="nav-btn active" data-page="overview" onclick="nav('overview')">Overview</button><button class="nav-btn" data-page="chief" onclick="nav('chief')">Chief</button><button class="nav-btn" data-page="team" onclick="nav('team')">Team</button><button class="nav-btn" data-page="products" onclick="nav('products')">Products</button><button class="nav-btn" data-page="campaigns" onclick="nav('campaigns')">Campaigns</button><button class="nav-btn" data-page="calendar" onclick="nav('calendar')">Calendar</button></nav><div class="nav-label">System</div><nav class="nav"><button class="nav-btn" data-page="models" onclick="nav('models')">Models</button><button class="nav-btn" data-page="connections" onclick="nav('connections')">Connections</button><button class="nav-btn" data-page="settings" onclick="nav('settings')">Settings</button></nav><div class="sidebar-foot"><div class="mini-status"><span id="miniProject">No active product</span><span class="dot ok"></span></div></div></aside>
 <main class="main"><header class="topbar"><div class="crumb"><span>SAC Studio</span><span>/</span><strong id="crumb">Overview</strong></div><div class="top-actions"><div class="custom-select"><select id="projectPicker" class="control" style="width:180px;height:32px;min-height:32px" onchange="switchProject(this.value)"></select></div><button id="newCampaign" class="btn primary" onclick="openCampaign()">New campaign</button></div></header><div class="content">
 <section id="overview" class="page active"><div class="heading"><div><h1>Your AI marketing department</h1><p>You work with one Chief. The Chief learns the product, designs the right specialist team, coordinates work and only brings you questions, access requests or decisions that genuinely need you.</p></div></div><div id="setupPanel" class="setup"><div class="setup-head"><b>Set up the department</b><p>The product always shows the next thing you need to do.</p></div><div id="setupSteps" class="steps"></div></div><div class="next"><div><strong id="nextTitle"></strong><p id="nextCopy"></p></div><button id="nextBtn" class="btn green">Continue</button></div><div class="grid4" style="margin-bottom:14px"><div class="stat"><label>Agents working</label><strong id="sWorking">0</strong><span>right now</span></div><div class="stat"><label>Agents blocked</label><strong id="sBlocked">0</strong><span>waiting on access</span></div><div class="stat"><label>Jobs running</label><strong id="sJobs">0</strong><span>active workflows</span></div><div class="stat"><label>Needs you</label><strong id="sNeeds">0</strong><span>pending requests</span></div></div><div class="grid2"><div class="card"><div class="card-head"><div><div class="card-title">Your team</div><div class="card-sub">Live state of the department</div></div><button class="btn" onclick="nav('team')">Open team</button></div><div class="card-body"><div id="overviewAgents" class="agent-grid"></div></div></div><div class="card"><div class="card-head"><div><div class="card-title">Needs you</div><div class="card-sub">Access, approvals and missing decisions</div></div></div><div id="requests" class="card-body"></div></div></div></section>
 <section id="chief" class="page"><div class="heading"><div><h1>Chief</h1><p>Your main interface with the department. Talk here instead of briefing every specialist separately.</p></div></div><div class="chief-layout"><div class="card chat"><div class="card-head"><div><div class="card-title">Conversation with the Chief</div><div class="card-sub">Strategy, priorities, hiring and blockers</div></div></div><div id="chiefLog" class="chat-log"></div><div class="composer"><textarea id="chiefInput" class="control" placeholder="Tell the Chief what you want to achieve…"></textarea><button class="btn primary" onclick="sendChief()">Send</button></div></div><div class="card"><div class="card-head"><div><div class="card-title">Internal communication</div><div class="card-sub">What agents are saying to each other</div></div></div><div id="internalFeed" class="card-body"></div></div></div></section>
@@ -9,6 +9,74 @@
 <section id="calendar" class="page"><div class="heading"><div><h1>Calendar</h1><p>A single view of planned content. Publishing remains manual until explicit channel permissions are enabled.</p></div></div><div class="card"><div class="card-body"><div id="calendarGrid" class="calendar"></div></div></div></section>
 <section id="models" class="page"><div class="heading"><div><h1>Models</h1><p>The role belongs to the agent; the model is only its brain. Change models without losing memory, permissions or identity.</p></div><button class="btn primary" onclick="openModal('modelModal')">Add model</button></div><div class="grid2"><div class="card"><div class="card-head"><div><div class="card-title">Model profiles</div></div></div><div class="card-body"><div id="modelCards" class="project-grid"></div></div></div><div class="card"><div class="card-head"><div><div class="card-title">Agent routing</div></div></div><div id="routing" class="card-body"></div></div></div></section>
 <section id="connections" class="page"><div class="heading"><div><h1>Connections</h1><p>Connections belong to SAC, not to individual models. Agents request only the tools they need.</p></div></div><div class="grid3"><div class="project-card"><div class="repo-name">GitHub</div><div id="ghState" class="repo-desc"></div><button class="btn" onclick="openModal('githubModal')">Configure</button></div><div class="project-card"><div class="repo-name">OpenAI</div><div id="oaState" class="repo-desc"></div><button class="btn" onclick="openModal('aiModal')">Configure</button></div><div class="project-card"><div class="repo-name">Anthropic</div><div id="anState" class="repo-desc"></div><button class="btn" onclick="openModal('aiModal')">Configure</button></div><div class="project-card"><div class="repo-name">Instagram</div><div id="instagramState" class="repo-desc"></div><span class="pill amber">permission layer ready</span></div><div class="project-card"><div class="repo-name">LinkedIn</div><div id="linkedinState" class="repo-desc"></div><span class="pill amber">permission layer ready</span></div><div class="project-card"><div class="repo-name">X</div><div id="xState" class="repo-desc"></div><span class="pill amber">permission layer ready</span></div></div><div class="card" style="margin-top:14px"><div class="card-body"><div class="sub">SAC does not pretend a social account is connected without a real OAuth/API authorization. Agents can already request access and permissions; actual social connectors must be authorized before monitoring or publishing.</div></div></div></section>
+
+<section id="settings" class="page">
+  <div class="heading">
+    <div>
+      <h1>Appearance</h1>
+      <p>Personalizza SAC senza cambiare la struttura del prodotto. Le preferenze restano su questo browser e vengono applicate automaticamente a ogni apertura.</p>
+    </div>
+  </div>
+  <div class="settings-layout">
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Theme</div><div class="card-sub">Scegli la modalità generale dell’interfaccia</div></div></div>
+      <div class="card-body">
+        <div class="appearance-group">
+          <label class="appearance-label">Color mode</label>
+          <div class="segmented" id="themeControl">
+            <button type="button" data-theme-value="dark" onclick="setAppearance('theme','dark')">Dark</button>
+            <button type="button" data-theme-value="light" onclick="setAppearance('theme','light')">Light</button>
+          </div>
+        </div>
+        <div class="appearance-group">
+          <label class="appearance-label">Text size</label>
+          <div class="segmented" id="textControl">
+            <button type="button" data-text-value="compact" onclick="setAppearance('textSize','compact')">Compact</button>
+            <button type="button" data-text-value="comfortable" onclick="setAppearance('textSize','comfortable')">Comfortable</button>
+            <button type="button" data-text-value="large" onclick="setAppearance('textSize','large')">Large</button>
+          </div>
+          <div class="appearance-hint">La modalità predefinita è Comfortable, più grande rispetto alla prima versione.</div>
+        </div>
+        <div class="appearance-group">
+          <label class="appearance-label">Accent color</label>
+          <div class="swatches" id="accentControl">
+            <button type="button" class="swatch" data-accent-value="green" onclick="setAppearance('accent','green')" aria-label="Green"><span style="--swatch:#3ecf8e"></span>Green</button>
+            <button type="button" class="swatch" data-accent-value="blue" onclick="setAppearance('accent','blue')" aria-label="Blue"><span style="--swatch:#5b8cff"></span>Blue</button>
+            <button type="button" class="swatch" data-accent-value="violet" onclick="setAppearance('accent','violet')" aria-label="Violet"><span style="--swatch:#8b7cf6"></span>Violet</button>
+            <button type="button" class="swatch" data-accent-value="orange" onclick="setAppearance('accent','orange')" aria-label="Orange"><span style="--swatch:#f59f45"></span>Orange</button>
+            <button type="button" class="swatch" data-accent-value="mono" onclick="setAppearance('accent','mono')" aria-label="Monochrome"><span class="mono-swatch"></span>Mono</button>
+          </div>
+          <div class="appearance-hint">Mono diventa bianco in Dark Mode e nero in Light Mode.</div>
+        </div>
+        <div class="appearance-group">
+          <label class="appearance-label">Surface tone</label>
+          <div class="surface-options" id="surfaceControl">
+            <button type="button" data-surface-value="neutral" onclick="setAppearance('surface','neutral')"><span class="surface-preview neutral"></span><b>Neutral</b><small>Grigio puro</small></button>
+            <button type="button" data-surface-value="slate" onclick="setAppearance('surface','slate')"><span class="surface-preview slate"></span><b>Slate</b><small>Freddo / bluastro</small></button>
+            <button type="button" data-surface-value="graphite" onclick="setAppearance('surface','graphite')"><span class="surface-preview graphite"></span><b>Graphite</b><small>Più profondo</small></button>
+            <button type="button" data-surface-value="warm" onclick="setAppearance('surface','warm')"><span class="surface-preview warm"></span><b>Warm</b><small>Caldo / morbido</small></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card appearance-preview-card">
+      <div class="card-head"><div><div class="card-title">Live preview</div><div class="card-sub">Le modifiche vengono applicate immediatamente</div></div></div>
+      <div class="card-body">
+        <div class="appearance-preview">
+          <div class="preview-top"><span class="preview-dot"></span><span>SAC Studio</span></div>
+          <div class="preview-panel">
+            <div class="preview-eyebrow">Chief</div>
+            <div class="preview-title">Your marketing department is ready</div>
+            <div class="preview-copy">Parla con il Chief, assegna un obiettivo e osserva il team lavorare.</div>
+            <div class="preview-actions"><span class="preview-primary">New campaign</span><span class="preview-secondary">Open team</span></div>
+          </div>
+        </div>
+        <button class="btn" style="margin-top:14px" onclick="resetAppearance()">Reset appearance</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 </div></main></div>
 <div id="productModal" class="modal-wrap"><div class="modal"><div class="modal-head"><b>Add product</b><button class="x" onclick="closeModal('productModal')">×</button></div><div class="modal-body"><div class="field"><label>Product name</label><input id="productName" class="control"></div><div class="field"><label>GitHub repository (optional)</label><input id="productRepo" class="control" placeholder="owner/repository"></div><div class="field"><label>Hardware / physical product context (optional)</label><textarea id="hardwareContext" class="control"></textarea></div><button class="btn primary" onclick="createProduct()">Let the Chief study it</button></div></div></div>
 <div id="discoveryModal" class="modal-wrap"><div class="modal wide"><div class="modal-head"><b id="discoveryTitle"></b><button class="x" onclick="closeModal('discoveryModal')">×</button></div><div id="discoveryLog" class="chat-log"></div><div id="discoveryComposer" class="composer"><textarea id="discoveryAnswer" class="control"></textarea><button id="discoverySend" class="btn primary">Send</button></div></div></div>

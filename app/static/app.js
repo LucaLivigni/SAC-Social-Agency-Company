@@ -1,4 +1,34 @@
 const $=id=>document.getElementById(id);let state=null,repos=[],activeProjectId='',activeAgentId='',poll=null;
+
+const APPEARANCE_KEY='sac-appearance-v1';
+const appearanceDefaults={theme:'dark',textSize:'comfortable',accent:'green',surface:'neutral'};
+function loadAppearance(){
+  try{return {...appearanceDefaults,...JSON.parse(localStorage.getItem(APPEARANCE_KEY)||'{}')}}catch{return {...appearanceDefaults}}
+}
+let appearance=loadAppearance();
+function applyAppearance(){
+  document.body.dataset.theme=appearance.theme;
+  document.body.dataset.textSize=appearance.textSize;
+  document.body.dataset.accent=appearance.accent;
+  document.body.dataset.surface=appearance.surface;
+  document.documentElement.style.colorScheme=appearance.theme;
+  if($('themeControl')) document.querySelectorAll('[data-theme-value]').forEach(b=>b.classList.toggle('active',b.dataset.themeValue===appearance.theme));
+  if($('textControl')) document.querySelectorAll('[data-text-value]').forEach(b=>b.classList.toggle('active',b.dataset.textValue===appearance.textSize));
+  if($('accentControl')) document.querySelectorAll('[data-accent-value]').forEach(b=>b.classList.toggle('active',b.dataset.accentValue===appearance.accent));
+  if($('surfaceControl')) document.querySelectorAll('[data-surface-value]').forEach(b=>b.classList.toggle('active',b.dataset.surfaceValue===appearance.surface));
+}
+function setAppearance(key,value){
+  appearance[key]=value;
+  localStorage.setItem(APPEARANCE_KEY,JSON.stringify(appearance));
+  applyAppearance();
+}
+function resetAppearance(){
+  appearance={...appearanceDefaults};
+  localStorage.setItem(APPEARANCE_KEY,JSON.stringify(appearance));
+  applyAppearance();
+  toast('Appearance reset');
+}
+
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 async function api(url,opt={}){const r=await fetch(url,opt);if(!r.ok){let t=await r.text();try{t=JSON.parse(t).detail}catch{}throw new Error(t)}return r.json()}
 function toast(m){$('toast').textContent=m;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
@@ -41,4 +71,4 @@ async function saveAnthropic(){const v=$('anthropicKey').value.trim();if(!v)retu
 async function saveGithub(){const v=$('githubToken').value.trim();if(!v)return;await api('/api/connections/github',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({value:v})});closeModal('githubModal');await refresh()}
 async function addModel(){const b={name:$('modelName').value,provider:$('modelProvider').value,model_id:$('modelId').value,base_url:$('modelBase').value,secret:$('modelSecret').value};await api('/api/models',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});closeModal('modelModal');await refresh()}
 async function assignModel(agent,model){await api('/api/models/assign',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agent_id:agent,model_profile_id:model})});await refresh()}
-document.addEventListener('click',e=>{if(e.target.classList.contains('modal-wrap'))e.target.classList.remove('open')});(async()=>{await refresh();poll=setInterval(refresh,1800)})();
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-wrap'))e.target.classList.remove('open')});applyAppearance();(async()=>{await refresh();applyAppearance();poll=setInterval(refresh,1800)})();
